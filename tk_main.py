@@ -67,7 +67,7 @@ class ClipboardManager:
             # })
             self.hotkey_listener = pynput_kb.GlobalHotKeys({
                 '<cmd>+v': _request_show_ui,  # Primary hotkey for Linux
-                # '<cmd>+<shift>+v': _request_paste_latest,  # Paste latest
+                '<cmd>+<shift>+v': _request_paste_latest,  # Paste latest
             })
             self.hotkey_listener.start()
             print("🚀 Clipboard Manager Started (Linux Edition)")
@@ -250,29 +250,10 @@ class ClipboardManager:
         pin_btn.pack(side=tk.RIGHT, padx=5, pady=10)
         
         pinned = [False]
-
         def toggle_pin(e):
             pinned[0] = not pinned[0]
             pin_btn.config(text="📍" if pinned[0] else "📌")
         pin_btn.bind("<Button-1>", toggle_pin)
-        
-        # Make window draggable via header
-        self._drag_data = {"x": 0, "y": 0}
-        def start_move(event):
-            self._drag_data["x"] = event.x
-            self._drag_data["y"] = event.y
-
-        def do_move(event):
-            dx = event.x - self._drag_data["x"]
-            dy = event.y - self._drag_data["y"]
-            x = self.ui_window.winfo_x() + dx
-            y = self.ui_window.winfo_y() + dy
-            self.ui_window.geometry(f"+{x}+{y}")
-
-        header.bind("<Button-1>", start_move)
-        header.bind("<B1-Motion>", do_move)
-        title_label.bind("<Button-1>", start_move)
-        title_label.bind("<B1-Motion>", do_move)
         
         # Search box
         search_frame = tk.Frame(main_frame, bg=bg_color)
@@ -642,3 +623,10 @@ if __name__ == "__main__":
         print("\n👋 Clipboard Manager stopped")
         manager.stop()
 
+# ---
+# it's working , but bad , if i click cmd + v paste direcly , that not the this need to happen , need to select by mouse or arrows and  enter ,
+# i can't move the clip board ui by mouse
+# the original place that clipboard to apear is bottom of the line that i write on it 
+# if i click any place except  ui , should ui hide , 
+# arrows and typing in the search not working i guess beacuse is not in top , like not the hightlited one 
+# if clciked cmd + v show me ui but in the same time paste , but not that what need , just paste after clicking the selection 
